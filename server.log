@@ -1,0 +1,42 @@
+▲ Next.js 16.3.1
+- Local:         http://localhost:3000
+- Network:       http://192.168.29.169:3000
+✓ Ready in 400ms
+✓ Running next.config.ts took 96ms
+[home] data fetch failed (is the DB connected?) Error [PrismaClientKnownRequestError]: 
+Invalid `prisma.portfolioImage.findMany()` invocation:
+
+
+User was denied access on the database `(not available)`
+    at async n (C:\Users\PARAS\OneDrive\Desktop\Khurana Studio\khurana-studio\.next\server\chunks\ssr\src_1qnzk02._.js:1:222) {
+  code: 'P1010',
+  meta: {
+    modelName: 'PortfolioImage',
+    driverAdapterError: Error [DriverAdapterError]: DatabaseAccessDenied
+        at F.onError (C:\Users\PARAS\OneDrive\Desktop\Khurana Studio\khurana-studio\.next\server\chunks\ssr\_0bnmksj._.js:1:8309)
+        at F.performIO (C:\Users\PARAS\OneDrive\Desktop\Khurana Studio\khurana-studio\.next\server\chunks\ssr\_0bnmksj._.js:1:8250)
+        at async F.queryRaw (C:\Users\PARAS\OneDrive\Desktop\Khurana Studio\khurana-studio\.next\server\chunks\ssr\_0bnmksj._.js:1:4838) {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+[shop] DB unavailable
+[home] data fetch failed (is the DB connected?) Error [PrismaClientKnownRequestError]: 
+Invalid `prisma.portfolioImage.findMany()` invocation:
+
+
+User was denied access on the database `(not available)`
+    at async n (C:\Users\PARAS\OneDrive\Desktop\Khurana Studio\khurana-studio\.next\server\chunks\ssr\src_1qnzk02._.js:1:222) {
+  code: 'P1010',
+  meta: {
+    modelName: 'PortfolioImage',
+    driverAdapterError: Error [DriverAdapterError]: DatabaseAccessDenied
+        at F.onError (C:\Users\PARAS\OneDrive\Desktop\Khurana Studio\khurana-studio\.next\server\chunks\ssr\_0bnmksj._.js:1:8309)
+        at F.performIO (C:\Users\PARAS\OneDrive\Desktop\Khurana Studio\khurana-studio\.next\server\chunks\ssr\_0bnmksj._.js:1:8250)
+        at async F.queryRaw (C:\Users\PARAS\OneDrive\Desktop\Khurana Studio\khurana-studio\.next\server\chunks\ssr\_0bnmksj._.js:1:4838) {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
