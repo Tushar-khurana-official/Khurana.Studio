@@ -6,6 +6,7 @@ import { StudioImage } from "@/components/ui/studio-image";
 import { formatINR, cn } from "@/lib/utils";
 import { useCartStore } from "@/lib/cart-store";
 import { useWishlistStore } from "@/lib/wishlist-store";
+import { useMounted } from "@/hooks/use-mounted";
 import type { Product } from "@/hooks/use-products";
 
 const typeLabels: Record<string, string> = {
@@ -16,8 +17,10 @@ const typeLabels: Record<string, string> = {
 
 export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
   const addItem = useCartStore((s) => s.addItem);
-  const wishlist = useWishlistStore((s) => ({ ids: s.ids, toggle: s.toggle, has: s.has }));
-  const wished = wishlist.has(product.id);
+  const wishlistIds = useWishlistStore((s) => s.ids);
+  const wishlistToggle = useWishlistStore((s) => s.toggle);
+  const mounted = useMounted();
+  const wished = mounted && wishlistIds.includes(product.id);
 
   return (
     <motion.div
@@ -37,7 +40,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           className="rounded-none transition duration-700 group-hover:scale-105"
           fill
         />
-        <span className="absolute left-4 top-4 rounded-full bg-black/60 px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-white backdrop-blur">
+        <span className="absolute left-4 top-4 rounded-full bg-accent px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-accent-foreground shadow-sm">
           {typeLabels[product.type]}
         </span>
         <button
@@ -45,7 +48,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
           onClick={(e) => {
             e.preventDefault();
-            wishlist.toggle(product.id);
+            wishlistToggle(product.id);
           }}
           className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur transition hover:bg-black/70"
         >

@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
+import { useMounted } from "@/hooks/use-mounted";
 import { StudioImage } from "@/components/ui/studio-image";
 import { ButtonLink } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatINR } from "@/lib/utils";
 
 export function CartPage() {
@@ -11,6 +13,24 @@ export function CartPage() {
   const updateQuantity = useCartStore((s) => s.updateQuantity);
   const removeItem = useCartStore((s) => s.removeItem);
   const subtotal = useCartStore((s) => s.subtotal());
+  const mounted = useMounted();
+
+  if (!mounted) {
+    return (
+      <div className="py-12">
+        <div className="grid gap-10 lg:grid-cols-[1fr_340px]">
+          <ul className="space-y-4">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <li key={i}>
+                <Skeleton className="h-28 w-full rounded-2xl" />
+              </li>
+            ))}
+          </ul>
+          <Skeleton className="h-64 w-full rounded-2xl" />
+        </div>
+      </div>
+    );
+  }
 
   if (!items.length) {
     return (
@@ -32,7 +52,7 @@ export function CartPage() {
             key={item.id}
             className="flex gap-4 rounded-2xl border border-border bg-card p-4"
           >
-            <div className="h-24 w-24 shrink-0 overflow-hidden rounded-xl">
+            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl">
               <StudioImage
                 publicId={item.image}
                 alt={item.name}

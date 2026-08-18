@@ -4,9 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useCartStore } from "@/lib/cart-store";
+import { useMounted } from "@/hooks/use-mounted";
 import { loadRazorpay } from "@/lib/razorpay-client";
 import { Button } from "@/components/ui/button";
 import { formatINR } from "@/lib/utils";
+import { getAccentColor } from "@/lib/accent-color";
 
 interface CheckoutFormProps {
   prefill?: { name?: string; email?: string; phone?: string } | null;
@@ -17,6 +19,7 @@ export function CheckoutForm({ prefill }: CheckoutFormProps) {
   const items = useCartStore((s) => s.items);
   const clear = useCartStore((s) => s.clear);
   const subtotal = useCartStore((s) => s.subtotal());
+  const mounted = useMounted();
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -30,6 +33,9 @@ export function CheckoutForm({ prefill }: CheckoutFormProps) {
   });
   const [status, setStatus] = useState<"idle" | "processing" | "error">("idle");
   const [error, setError] = useState("");
+
+  const shownItems = mounted ? items : [];
+  const shownSubtotal = mounted ? subtotal : 0;
 
   const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
@@ -61,7 +67,7 @@ export function CheckoutForm({ prefill }: CheckoutFormProps) {
         description: "Photography order",
         order_id: checkoutData.razorpayOrderId,
         prefill: { name: form.name, email: form.email, contact: form.phone },
-        theme: { color: "#c9a227" },
+        theme: { color: getAccentColor() },
         handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
           const verifyRes = await fetch("/api/orders/verify", {
             method: "POST",
@@ -145,7 +151,7 @@ export function CheckoutForm({ prefill }: CheckoutFormProps) {
       <aside className="h-fit rounded-2xl border border-border bg-card p-6 lg:sticky lg:top-24">
         <h2 className="font-display text-xl font-semibold">Summary</h2>
         <ul className="mt-4 space-y-2 text-sm">
-          {items.map((i) => (
+          {shownItems.map((i) => (
             <li key={i.id} className="flex justify-between gap-3">
               <span className="text-muted-foreground">
                 {i.quantity} × {i.name}
@@ -156,15 +162,15 @@ export function CheckoutForm({ prefill }: CheckoutFormProps) {
         </ul>
         <div className="mt-4 flex justify-between border-t border-border pt-3 font-semibold">
           <span>Total</span>
-          <span>{formatINR(subtotal)}</span>
+          <span>{formatINR(shownSubtotal)}</span>
         </div>
         {error && (
           <p role="alert" className="mt-4 rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-500">
             {error}
           </p>
         )}
-        <Button type="submit" size="lg" className="mt-6 w-full" disabled={status === "processing" || !items.length}>
-          {status === "processing" ? "Redirecting to payment…" : `Pay ${formatINR(subtotal)}`}
+        <Button type="submit" size="lg" className="mt-6 w-full" disabled={!mounted || status === "processing" || !items.length}>
+          {status === "processing" ? "Redirecting to payment…" : `Pay ${formatINR(shownSubtotal)}`}
         </Button>
         <p className="mt-4 text-center text-xs text-muted-foreground">
           Payments securely processed by <span className="font-medium">Razorpay</span> · UPI, cards & netbanking

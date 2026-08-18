@@ -14,6 +14,9 @@ export function UploadWidget() {
   const [featured, setFeatured] = useState(false);
   const [error, setError] = useState("");
 
+  const cloudConfigured = Boolean(process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
+  const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
   const handleUpload = async (results: CloudinaryUploadWidgetResults) => {
     const info = results.info;
     if (!info || typeof info === "string") return;
@@ -90,17 +93,26 @@ export function UploadWidget() {
           </p>
         )}
 
-        <CldUploadWidget
-          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-          options={{ folder: "khurana-studio", sources: ["local", "url", "camera"] }}
-          onSuccess={handleUpload}
-        >
-          {({ open }) => (
-            <Button type="button" onClick={() => open()} size="lg">
-              Upload images
-            </Button>
-          )}
-        </CldUploadWidget>
+        {!cloudConfigured ? (
+          <p className="rounded-lg bg-muted px-4 py-3 text-sm text-muted-foreground">
+            Cloudinary is not configured yet. Add{" "}
+            <code className="rounded bg-background px-1.5 py-0.5">NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME</code> and{" "}
+            <code className="rounded bg-background px-1.5 py-0.5">NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET</code> to your
+            environment to enable uploads.
+          </p>
+        ) : (
+          <CldUploadWidget
+            uploadPreset={uploadPreset}
+            options={{ folder: "khurana-studio", sources: ["local", "url", "camera"] }}
+            onSuccess={handleUpload}
+          >
+            {({ open }) => (
+              <Button type="button" onClick={() => open()} size="lg">
+                Upload images
+              </Button>
+            )}
+          </CldUploadWidget>
+        )}
         <p className="text-xs text-muted-foreground">
           Need a signed upload? Use{" "}
           <code className="rounded bg-muted px-1.5 py-0.5">POST /api/upload/sign</code> and the

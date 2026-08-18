@@ -3,32 +3,38 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #faf7f2;
-  --foreground: #141210;
-  --card: #ffffff;
-  --card-foreground: #141210;
-  --muted: #f1ece4;
-  --muted-foreground: #6b645c;
-  --border: #e7dfd3;
-  --accent: #c9a227;
-  --accent-foreground: #141210;
-  --gold: #c9a227;
-  --gold-light: #e6c665;
+  /* Light — warm white base + refined pink accent */
+  --background: #fdfbfb;
+  --foreground: #1f1c1d;
+  --card: #fff5f7;
+  --card-foreground: #1f1c1d;
+  --muted: #f7ebee;
+  --muted-foreground: #6e6065;
+  --border: #f1dfe3;
+  --accent: #be185d;
+  --accent-bright: #be185d;
+  --accent-deep: #9d174d;
+  --accent-foreground: #ffffff;
+  --gold: #be185d;
+  --gold-light: #ec4899;
   --radius: 1rem;
 }
 
 .dark {
-  --background: #0b0a08;
-  --foreground: #f5f1e8;
-  --card: #14110e;
-  --card-foreground: #f5f1e8;
-  --muted: #1d1915;
-  --muted-foreground: #a89f92;
-  --border: #2a241d;
-  --accent: #d4af37;
-  --accent-foreground: #141210;
-  --gold: #d4af37;
-  --gold-light: #f0d17a;
+  /* Dark — near-black base + rich green accent */
+  --background: #0c0e0c;
+  --foreground: #f2f2f0;
+  --card: #151816;
+  --card-foreground: #f2f2f0;
+  --muted: #1a1d1a;
+  --muted-foreground: #a3ada3;
+  --border: #262a26;
+  --accent: #15803d;
+  --accent-bright: #22c55e;
+  --accent-deep: #166534;
+  --accent-foreground: #f2f2f0;
+  --gold: #22c55e;
+  --gold-light: #4ade80;
 }
 
 @theme inline {
@@ -40,6 +46,8 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
   --color-accent: var(--accent);
+  --color-accent-bright: var(--accent-bright);
+  --color-accent-deep: var(--accent-deep);
   --color-accent-foreground: var(--accent-foreground);
   --color-gold: var(--gold);
   --color-gold-light: var(--gold-light);
@@ -68,8 +76,8 @@
   }
 
   ::selection {
-    background: var(--gold);
-    color: #141210;
+    background: var(--accent);
+    color: var(--accent-foreground);
   }
 }
 
@@ -83,7 +91,7 @@
   }
 
   .gold-gradient-text {
-    background: linear-gradient(120deg, var(--gold-light), var(--gold) 50%, #8a6d14);
+    background: linear-gradient(120deg, var(--gold-light), var(--gold) 50%, var(--accent-deep));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -112,7 +120,7 @@
     position: absolute;
     inset: 0;
     transform: translateX(-100%);
-    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--card-foreground) 6%, transparent), transparent);
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent-bright) 18%, transparent), transparent);
     animation: shimmer 1.6s infinite;
   }
   @keyframes shimmer {

@@ -3,13 +3,13 @@ import type { ButtonHTMLAttributes, AnchorHTMLAttributes } from "react";
 import Link from "next/link";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]";
+  "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]";
 
 const variants = {
-  primary: "bg-accent text-accent-foreground hover:brightness-110 shadow-lg shadow-accent/20",
+  primary: "bg-accent text-accent-foreground hover:bg-accent-deep shadow-lg shadow-accent/20",
   outline:
-    "border border-border bg-transparent hover:bg-muted hover:border-accent/50",
-  ghost: "hover:bg-muted",
+    "border border-border bg-transparent hover:bg-muted hover:border-accent/60 hover:text-accent-bright",
+  ghost: "hover:bg-muted hover:text-accent-bright",
   gold: "gold-gradient-text border border-gold/40 hover:border-gold",
 } as const;
 

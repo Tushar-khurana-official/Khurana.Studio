@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isBefore, startOfToday } from "date-fns";
 import { cn, formatINR } from "@/lib/utils";
+import { useMounted } from "@/hooks/use-mounted";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { loadRazorpay } from "@/lib/razorpay-client";
+import { getAccentColor } from "@/lib/accent-color";
 
 const services = [
   { key: "wedding", label: "Wedding", deposit: 50000, hint: "Full day coverage" },
@@ -24,16 +26,19 @@ export function BookingForm() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [service, setService] = useState("wedding");
-  const [month, setMonth] = useState(startOfToday());
+  const [month, setMonth] = useState<Date | null>(null);
   const [date, setDate] = useState<string | null>(null);
   const [timeSlot, setTimeSlot] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", phone: "", notes: "" });
   const [status, setStatus] = useState<"idle" | "processing" | "error">("idle");
   const [error, setError] = useState("");
+  const mounted = useMounted();
+  const today = startOfToday();
+  const currentMonth = month ?? today;
 
   const serviceMeta = services.find((s) => s.key === service)!;
 
-  const { data: slots, isLoading: slotsLoading } = useQuery({
+  const { data: slots, isLoading: slotsLoading, isError: slotsError, refetch: refetchSlots } = useQuery({
     queryKey: ["slots", date],
     queryFn: async () => {
       const res = await fetch(`/api/bookings?date=${date}`);
@@ -45,12 +50,10 @@ export function BookingForm() {
   });
 
   const days = useMemo(() => {
-    const start = startOfMonth(month);
-    const end = endOfMonth(month);
+    const start = startOfMonth(currentMonth);
+    const end = endOfMonth(currentMonth);
     return eachDayOfInterval({ start, end });
-  }, [month]);
-
-  const today = startOfToday();
+  }, [currentMonth]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,7 +87,7 @@ export function BookingForm() {
         description: `${serviceMeta.label} deposit`,
         order_id: data.razorpayOrderId,
         prefill: { name: form.name, email: form.email, contact: form.phone },
-        theme: { color: "#c9a227" },
+        theme: { color: getAccentColor() },
         handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
           const confirmRes = await fetch("/api/bookings/confirm", {
             method: "POST",
@@ -175,62 +178,68 @@ export function BookingForm() {
 
       {step === 2 && (
         <div>
-          <div className="mb-5 flex items-center justify-between">
-            <button
-              type="button"
-              aria-label="Previous month"
-              onClick={() => setMonth((m) => subMonths(m, 1))}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-border hover:border-gold/50"
-            >
-              ←
-            </button>
-            <p className="font-display text-lg font-semibold">{format(month, "MMMM yyyy")}</p>
-            <button
-              type="button"
-              aria-label="Next month"
-              onClick={() => setMonth((m) => addMonths(m, 1))}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-border hover:border-gold/50"
-            >
-              →
-            </button>
-          </div>
-
-          <div className="grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground">
-            {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
-              <div key={d} className="py-1">
-                {d}
-              </div>
-            ))}
-            {Array.from({ length: startOfMonth(month).getDay() }).map((_, i) => (
-              <div key={`pad-${i}`} />
-            ))}
-            {days.map((day) => {
-              const key = format(day, "yyyy-MM-dd");
-              const disabled = isBefore(day, today);
-              const selected = date === key;
-              return (
+          {!mounted ? (
+            <Skeleton className="h-80 w-full rounded-2xl" />
+          ) : (
+            <>
+              <div className="mb-5 flex items-center justify-between">
                 <button
-                  key={key}
                   type="button"
-                  disabled={disabled}
-                  onClick={() => {
-                    setDate(key);
-                    setTimeSlot(null);
-                  }}
-                  className={cn(
-                    "aspect-square rounded-lg text-sm transition",
-                    disabled
-                      ? "cursor-not-allowed text-muted-foreground/30"
-                      : selected
-                        ? "bg-accent font-semibold text-accent-foreground"
-                        : "hover:bg-muted hover:border-gold/40"
-                  )}
+                  aria-label="Previous month"
+                  onClick={() => setMonth(subMonths(currentMonth, 1))}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border hover:border-gold/50"
                 >
-                  {format(day, "d")}
+                  ←
                 </button>
-              );
-            })}
-          </div>
+                <p className="font-display text-lg font-semibold">{format(currentMonth, "MMMM yyyy")}</p>
+                <button
+                  type="button"
+                  aria-label="Next month"
+                  onClick={() => setMonth(addMonths(currentMonth, 1))}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border hover:border-gold/50"
+                >
+                  →
+                </button>
+              </div>
+
+              <div className="grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground">
+                {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
+                  <div key={d} className="py-1">
+                    {d}
+                  </div>
+                ))}
+                {Array.from({ length: startOfMonth(currentMonth).getDay() }).map((_, i) => (
+                  <div key={`pad-${i}`} />
+                ))}
+                {days.map((day) => {
+                  const key = format(day, "yyyy-MM-dd");
+                  const disabled = isBefore(day, today);
+                  const selected = date === key;
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => {
+                        setDate(key);
+                        setTimeSlot(null);
+                      }}
+                      className={cn(
+                        "aspect-square rounded-lg text-sm transition",
+                        disabled
+                          ? "cursor-not-allowed text-muted-foreground/30"
+                          : selected
+                            ? "bg-accent font-semibold text-accent-foreground"
+                            : "hover:bg-muted hover:border-gold/40"
+                      )}
+                    >
+                      {format(day, "d")}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
 
           {date && (
             <div className="mt-6">
@@ -241,9 +250,20 @@ export function BookingForm() {
                     <Skeleton key={i} className="h-10 w-20 rounded-full" />
                   ))}
                 </div>
-              ) : (
+              ) : slotsError ? (
+                <div className="rounded-xl border border-dashed border-red-500/40 bg-red-500/5 px-4 py-4 text-center">
+                  <p className="text-sm text-red-500">Couldn&apos;t load available slots right now.</p>
+                  <button
+                    type="button"
+                    onClick={() => refetchSlots()}
+                    className="mt-2 text-sm font-medium text-gold underline underline-offset-2"
+                  >
+                    Try again
+                  </button>
+                </div>
+              ) : slots && slots.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
-                  {slots?.map((slot) => (
+                  {slots.map((slot) => (
                     <button
                       key={slot.time}
                       type="button"
@@ -257,6 +277,15 @@ export function BookingForm() {
                     </button>
                   ))}
                 </div>
+              ) : (
+                <div className="rounded-xl border border-dashed border-border px-4 py-4 text-center text-sm text-muted-foreground">
+                  No slots available for this date, try another day.
+                </div>
+              )}
+              {date && timeSlot && (
+                <p className="mt-3 text-xs text-muted-foreground">
+                  Selected time: <span className="font-medium text-foreground">{timeSlot}</span>
+                </p>
               )}
             </div>
           )}

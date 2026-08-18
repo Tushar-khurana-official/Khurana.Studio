@@ -34,12 +34,25 @@ function CameraFallback({ quality }: { quality: "low" | "off" }) {
     <div className="relative h-full w-full overflow-hidden rounded-full" aria-hidden>
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative h-44 w-60 sm:h-56 sm:w-72">
-          <div className="absolute inset-0 rounded-2xl border border-gold/30 bg-card shadow-2xl shadow-gold/10" />
-          <div className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-gold/60 bg-foreground/5" />
-          <div className="absolute right-4 top-4 h-10 w-14 rounded-lg border border-border bg-foreground/10" />
+          {/* body */}
+          <div className="absolute inset-0 rounded-2xl border-2 border-accent/40 bg-card shadow-2xl shadow-accent/10" />
+          {/* grip */}
+          <div className="absolute bottom-6 right-2 top-9 w-7 rounded-l-xl bg-muted" />
+          {/* viewfinder hump */}
+          <div className="absolute left-7 top-4 h-10 w-16 rounded-lg border border-accent/40 bg-card">
+            <div className="absolute inset-x-2 bottom-1 top-2 rounded-sm bg-foreground/10" />
+          </div>
+          {/* lens */}
+          <div className="absolute left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-accent/60 bg-foreground/5">
+            <div className="absolute inset-2 rounded-full bg-accent/15" />
+            <div className="absolute inset-6 rounded-full border-2 border-accent/40" />
+            <div className="absolute left-1/2 top-1/2 h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground/20" />
+          </div>
+          {/* shutter / accent dot */}
+          <div className="absolute right-8 top-5 h-2.5 w-2.5 rounded-full bg-accent" />
           {quality === "low" ? (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="h-full w-full animate-[spin_12s_linear_infinite] rounded-2xl border border-dashed border-gold/40" />
+              <div className="h-full w-full animate-[spin_12s_linear_infinite] rounded-2xl border border-dashed border-accent/40" />
             </div>
           ) : null}
         </div>

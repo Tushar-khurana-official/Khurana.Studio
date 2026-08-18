@@ -20,9 +20,10 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   let featured: PortfolioImage[] = [];
   let testimonials: Awaited<ReturnType<typeof prisma.testimonial.findMany>> = [];
+  let studioPortrait: { publicId: string; title: string | null } | null = null;
 
   try {
-    const [images, ts] = await Promise.all([
+    const [images, ts, portrait] = await Promise.all([
       prisma.portfolioImage.findMany({
         where: { featured: true },
         orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
@@ -39,9 +40,24 @@ export default async function HomePage() {
         },
       }),
       prisma.testimonial.findMany({ where: { active: true }, take: 6 }),
+      prisma.portfolioImage.findFirst({
+        where: { category: "PORTRAIT", featured: true },
+        orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+        select: {
+          id: true,
+          publicId: true,
+          secureUrl: true,
+          width: true,
+          height: true,
+          title: true,
+          category: true,
+          featured: true,
+        },
+      }),
     ]);
     featured = images;
     testimonials = ts;
+    studioPortrait = portrait;
   } catch (err) {
     console.error("[home] data fetch failed (is the DB connected?)", err);
   }
@@ -52,7 +68,7 @@ export default async function HomePage() {
       <Hero />
       <FeaturedCarousel images={featured} />
       <Stats />
-      <StudioIntro />
+      <StudioIntro portrait={studioPortrait} />
       <Testimonials testimonials={testimonials} />
       <Cta />
     </>

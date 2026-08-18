@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { CldUploadWidget, type CloudinaryUploadWidgetResults } from "next-cloudinary";
 import { Button } from "@/components/ui/button";
 import { formatINR } from "@/lib/utils";
 
@@ -38,6 +39,19 @@ export function ProductManager({
   });
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+
+  const cloudConfigured = Boolean(process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
+  const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+  const handleUpload = (results: CloudinaryUploadWidgetResults) => {
+    const info = results.info;
+    if (!info || typeof info === "string") return;
+    const existing = form.images.split(",").map((s) => s.trim()).filter(Boolean);
+    if (!existing.includes(info.public_id)) {
+      existing.push(info.public_id);
+      setForm((f) => ({ ...f, images: existing.join(", ") }));
+    }
+  };
 
   const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
@@ -137,6 +151,26 @@ export function ProductManager({
               Cloudinary image public_ids <span className="text-muted-foreground/60">(comma-separated)</span>
             </span>
             <input value={form.images} onChange={set("images")} placeholder="khurana-studio/portrait-session" className={inputClass} />
+            {cloudConfigured ? (
+              <span className="mt-2 inline-block">
+                <CldUploadWidget
+                  uploadPreset={uploadPreset}
+                  options={{ folder: "khurana-studio", sources: ["local", "url", "camera"] }}
+                  onSuccess={handleUpload}
+                >
+                  {({ open }) => (
+                    <Button type="button" variant="outline" size="sm" onClick={() => open()}>
+                      Upload image
+                    </Button>
+                  )}
+                </CldUploadWidget>
+              </span>
+            ) : (
+              <span className="mt-2 block text-xs text-muted-foreground">
+                Cloudinary is not configured yet — add NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and
+                NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET to enable uploads.
+              </span>
+            )}
           </label>
           <label className="block text-sm">
             <span className="mb-1.5 block text-muted-foreground">Features (one per line)</span>

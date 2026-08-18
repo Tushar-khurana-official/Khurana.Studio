@@ -2,18 +2,16 @@
 
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
-import { useEffect, useState } from "react";
+import { useMounted } from "@/hooks/use-mounted";
 
 export function CartButton() {
   const count = useCartStore((s) => s.count());
-  const [mounted, setMounted] = useState(false);
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   return (
     <Link
       href="/cart"
-      aria-label={`Cart with ${count} items`}
+      aria-label={mounted ? `Cart with ${count} items` : "Cart"}
       className="relative flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted/50 transition hover:border-accent/50"
     >
       <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">

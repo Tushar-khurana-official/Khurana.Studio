@@ -44,15 +44,15 @@ export function Hero() {
             </ButtonLink>
           </div>
 
-          <dl className="mt-12 flex gap-10">
+          <dl className="mt-12 flex flex-wrap gap-x-12 gap-y-6 sm:gap-x-16">
             {[
               { value: "500+", label: "Shoots Delivered" },
               { value: "12", label: "Years of Craft" },
               { value: "300+", label: "Happy Clients" },
             ].map((stat) => (
-              <div key={stat.label}>
+              <div key={stat.label} className="min-w-[7rem]">
                 <dt className="text-2xl font-semibold sm:text-3xl">{stat.value}</dt>
-                <dd className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
+                <dd className="mt-1.5 text-xs uppercase tracking-wider text-muted-foreground">
                   {stat.label}
                 </dd>
               </div>

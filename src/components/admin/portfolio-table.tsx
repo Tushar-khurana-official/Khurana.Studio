@@ -50,8 +50,8 @@ export function PortfolioTable({
           {images.map((img) => (
             <tr key={img.id}>
               <td className="px-4 py-2">
-                <div className="h-14 w-20 overflow-hidden rounded-lg">
-                  <StudioImage publicId={img.publicId} alt={img.title ?? "Portfolio"} width={160} height={112} className="h-full w-full" fill />
+                <div className="relative h-14 w-20 overflow-hidden rounded-lg">
+                  <StudioImage publicId={img.publicId} alt={img.title ?? "Portfolio"} width={160} height={112} sizes="80px" className="h-full w-full" fill />
                 </div>
               </td>
               <td className="px-4 py-2">

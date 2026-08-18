@@ -2,13 +2,19 @@
 
 import { Canvas } from "@react-three/fiber";
 import { useTexture, OrbitControls, ContactShadows } from "@react-three/drei";
+import { useTheme } from "next-themes";
 import { optimizedUrl } from "@/lib/cloudinary-url";
+import "@/lib/three-console";
 
 function FramedPrint({ publicId }: { publicId: string }) {
+  const { resolvedTheme } = useTheme();
+  const dark = resolvedTheme !== "light";
+  const frame = dark ? "#166534" : "#9d174d";
+  const corner = dark ? "#22c55e" : "#db2777";
   const texture = useTexture(optimizedUrl(publicId, { w: 1200, h: 900, c: "fill" }));
 
   const frameMaterial = (
-    <meshStandardMaterial color="#8a6d14" metalness={0.85} roughness={0.35} />
+    <meshStandardMaterial color={frame} metalness={0.85} roughness={0.35} />
   );
 
   return (
@@ -21,7 +27,7 @@ function FramedPrint({ publicId }: { publicId: string }) {
       {/* Mat */}
       <mesh position={[0, 0, 0.06]}>
         <boxGeometry args={[2.3, 1.7, 0.02]} />
-        <meshStandardMaterial color="#f5f1e8" roughness={0.9} />
+        <meshStandardMaterial color="#f2f2f0" roughness={0.9} />
       </mesh>
       {/* Photo */}
       <mesh position={[0, 0, 0.09]}>
@@ -40,7 +46,7 @@ function FramedPrint({ publicId }: { publicId: string }) {
           envMapIntensity={1}
         />
       </mesh>
-      {/* Gold corner accents */}
+      {/* Accent corner accents */}
       {[
         [1.18, 0.88],
         [-1.18, 0.88],
@@ -49,7 +55,7 @@ function FramedPrint({ publicId }: { publicId: string }) {
       ].map(([x, y]) => (
         <mesh key={`${x}${y}`} position={[x, y, 0.08]}>
           <boxGeometry args={[0.08, 0.08, 0.14]} />
-          <meshStandardMaterial color="#e6c665" metalness={1} roughness={0.25} />
+          <meshStandardMaterial color={corner} metalness={1} roughness={0.25} />
         </mesh>
       ))}
     </group>
@@ -57,6 +63,10 @@ function FramedPrint({ publicId }: { publicId: string }) {
 }
 
 export function FrameMockup({ publicId }: { publicId: string }) {
+  const { resolvedTheme } = useTheme();
+  const dark = resolvedTheme !== "light";
+  const accent = dark ? "#22c55e" : "#db2777";
+
   return (
     <Canvas
       dpr={[1, 1.6]}
@@ -66,7 +76,7 @@ export function FrameMockup({ publicId }: { publicId: string }) {
     >
       <ambientLight intensity={0.55} />
       <directionalLight position={[4, 5, 3]} intensity={1.3} castShadow />
-      <pointLight position={[-3, 2, 2]} intensity={0.5} color="#c9a227" />
+      <pointLight position={[-3, 2, 2]} intensity={0.5} color={accent} />
 
       <FramedPrint publicId={publicId} />
 

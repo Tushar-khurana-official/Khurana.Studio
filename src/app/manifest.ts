@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Premium photography studio crafting cinematic weddings, portraits, events and products.",
     start_url: "/",
     display: "standalone",
-    background_color: "#0b0a08",
-    theme_color: "#0b0a08",
+    background_color: "#0c0e0c",
+    theme_color: "#0c0e0c",
     icons: [
       {
         src: "/icon.svg",
