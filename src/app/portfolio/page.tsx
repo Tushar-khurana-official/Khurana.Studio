@@ -11,7 +11,13 @@ export const metadata: Metadata = {
     "Explore Khurana Studio's weddings, pre-weddings, portraits, events and product photography.",
 };
 
-export default async function PortfolioPage() {
+export default async function PortfolioPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}) {
+  const { category } = await searchParams;
+
   let images: Awaited<ReturnType<typeof prisma.portfolioImage.findMany>> = [];
   try {
     images = await prisma.portfolioImage.findMany({
@@ -30,7 +36,7 @@ export default async function PortfolioPage() {
             title="The work speaks softly"
             description="Frames from recent shoots across weddings, pre-weddings, portraits, events and products. Tap any image to view it in full detail."
           />
-          <Gallery images={images} />
+          <Gallery images={images} initialCategory={category ?? ""} />
         </Section>
       </section>
     </>

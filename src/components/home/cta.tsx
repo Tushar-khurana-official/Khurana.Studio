@@ -1,10 +1,11 @@
 import { Section } from "@/components/ui/section";
 import { ButtonLink } from "@/components/ui/button";
+import { StaggerGroup, StaggerItem } from "@/components/ui/reveal";
 
 export function Cta() {
   return (
     <Section className="py-24">
-      <div className="relative overflow-hidden rounded-[2rem] border border-gold/30 bg-card px-8 py-16 text-center sm:px-16">
+      <StaggerGroup className="relative overflow-hidden rounded-[2rem] border border-gold/30 bg-card px-8 py-16 text-center sm:px-16" stagger={0.12}>
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
@@ -13,7 +14,7 @@ export function Cta() {
               "radial-gradient(70% 90% at 50% 0%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 70%)",
           }}
         />
-        <div className="relative">
+        <StaggerItem className="relative">
           <h2 className="mx-auto max-w-2xl font-display text-4xl font-semibold text-balance sm:text-5xl">
             Your story deserves to be <span className="gold-gradient-text">remembered</span>
           </h2>
@@ -29,8 +30,8 @@ export function Cta() {
               Shop Prints & Packages
             </ButtonLink>
           </div>
-        </div>
-      </div>
+        </StaggerItem>
+      </StaggerGroup>
     </Section>
   );
 }

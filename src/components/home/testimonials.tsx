@@ -1,5 +1,6 @@
 import { Section, SectionHeading } from "@/components/ui/section";
 import { initials } from "@/lib/utils";
+import { StaggerGroup, StaggerItem } from "@/components/ui/reveal";
 
 export interface Testimonial {
   id: string;
@@ -21,12 +22,10 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
         align="center"
         description="We measure success in the moments our clients relive when they look at their photographs."
       />
-      <div className="grid gap-6 md:grid-cols-3">
+      <StaggerGroup className="grid gap-6 md:grid-cols-3" stagger={0.1}>
         {items.map((t) => (
-          <figure
-            key={t.id}
-            className="flex flex-col rounded-2xl border border-border bg-card p-7 transition hover:border-gold/40"
-          >
+          <StaggerItem key={t.id}>
+            <figure className="flex h-full flex-col rounded-2xl border border-border bg-card p-7 transition hover:border-gold/40">
             <div className="mb-4 flex gap-1 text-gold" aria-label={`${t.rating} out of 5 stars`}>
               {Array.from({ length: 5 }).map((_, i) => (
                 <svg
@@ -51,8 +50,9 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
               </div>
             </figcaption>
           </figure>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerGroup>
     </Section>
   );
 }

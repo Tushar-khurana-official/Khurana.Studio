@@ -17,6 +17,7 @@
   --accent-foreground: #ffffff;
   --gold: #be185d;
   --gold-light: #ec4899;
+  --gold-deep: #9d174d;
   --radius: 1rem;
 }
 
@@ -35,6 +36,7 @@
   --accent-foreground: #f2f2f0;
   --gold: #22c55e;
   --gold-light: #4ade80;
+  --gold-deep: #16a34a;
 }
 
 @theme inline {
@@ -51,6 +53,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-gold: var(--gold);
   --color-gold-light: var(--gold-light);
+  --color-gold-deep: var(--gold-deep);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-display);
@@ -91,7 +94,7 @@
   }
 
   .gold-gradient-text {
-    background: linear-gradient(120deg, var(--gold-light), var(--gold) 50%, var(--accent-deep));
+    background: linear-gradient(120deg, var(--gold-light), var(--gold) 50%, var(--gold-deep));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -109,6 +112,21 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .animate-pulse-dot {
+    animation: pulse-dot 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.4;
+      transform: scale(0.72);
+    }
   }
 
   .shimmer {

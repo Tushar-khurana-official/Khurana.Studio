@@ -56,7 +56,7 @@ export function BookingsTable({
                 value={booking.status}
                 disabled={busy === booking.id}
                 onChange={(e) => update(booking.id, e.target.value)}
-                className="rounded-full border border-border bg-background px-3 py-1.5 text-xs outline-none focus:border-gold"
+                className="min-h-11 rounded-full border border-border bg-background px-3 text-xs outline-none focus:border-gold"
               >
                 {statuses.map((s) => (
                   <option key={s} value={s}>

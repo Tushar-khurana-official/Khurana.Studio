@@ -1,10 +1,42 @@
-import { Hero3D } from "@/components/three/hero-3d";
-import { ButtonLink } from "@/components/ui/button";
+"use client";
 
-export function Hero() {
+import { CameraVisual } from "@/components/home/camera-visual";
+import { HeroBackdrop } from "@/components/home/hero-backdrop";
+import { ButtonLink } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+
+export function Hero({ images }: { images?: { publicId?: string | null }[] }) {
+  const { data: products, isLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await fetch("/api/products");
+      if (!res.ok) throw new Error("Failed to load products");
+      const data = (await res.json()) as { products: { type: string; price: number; active: boolean }[] };
+      const serviceProducts = data.products.filter(
+        (p) => p.type === "SERVICE" && p.active
+      );
+      if (serviceProducts.length === 0) return { minPrice: null };
+      const min = serviceProducts.reduce(
+        (acc, p: { price: number }) => (p.price < acc ? p.price : acc),
+        serviceProducts[0].price
+      );
+      return { minPrice: min };
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
   return (
     <section className="relative flex min-h-screen flex-col overflow-hidden pt-16">
-      {/* backdrop */}
+      {/* blurred portfolio collage backdrop */}
+      <HeroBackdrop images={images} />
+
+      {/* readability overlay */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/75 via-background/55 to-background/85 dark:from-background/80 dark:via-background/55 dark:to-background/85"
+      />
+
+      {/* theme glow */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -24,18 +56,18 @@ export function Hero() {
 
       <div className="relative mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 items-center gap-8 px-5 py-16 sm:px-8 lg:grid-cols-2 lg:gap-4">
         <div className="flex flex-col items-start">
-          <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-muted/40 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-gold">
-            <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+          <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-muted/40 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-gold">
+            <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-gold" />
             Premium Photography Studio
           </p>
           <h1 className="font-display text-5xl font-semibold leading-[1.05] tracking-tight text-balance sm:text-6xl lg:text-7xl">
             Stories, framed <span className="gold-gradient-text">in light.</span>
           </h1>
-          <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mt-7 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
             Weddings, portraits, events and products — shot with cinematic obsession by Khurana
             Studio, and delivered as art you'll keep forever.
           </p>
-          <div className="mt-9 flex flex-wrap items-center gap-4">
+          <div className="mt-10 flex flex-wrap items-center gap-4">
             <ButtonLink href="/booking" size="lg">
               Book a Session
             </ButtonLink>
@@ -43,8 +75,17 @@ export function Hero() {
               View Portfolio
             </ButtonLink>
           </div>
+          {isLoading || !products?.minPrice ? (
+            <p className="mt-4 text-sm text-muted-foreground">
+              Packages starting at ₹{products?.minPrice ? products.minPrice / 100 : "—"}
+            </p>
+          ) : (
+            <p className="mt-4 text-sm text-muted-foreground">
+              Packages starting at ₹{"0" + products?.minPrice / 100}
+            </p>
+          )}
 
-          <dl className="mt-12 flex flex-wrap gap-x-12 gap-y-6 sm:gap-x-16">
+          <dl className="mt-16 flex flex-wrap gap-x-12 gap-y-6 sm:gap-x-16">
             {[
               { value: "500+", label: "Shoots Delivered" },
               { value: "12", label: "Years of Craft" },
@@ -60,8 +101,8 @@ export function Hero() {
           </dl>
         </div>
 
-        <div className="relative mx-auto h-[320px] w-full max-w-lg sm:h-[420px] lg:h-[560px]">
-          <Hero3D />
+        <div className="relative mx-auto aspect-[677/369] w-full max-w-[560px] lg:aspect-auto lg:h-[420px] lg:max-w-none">
+          <CameraVisual />
         </div>
       </div>
 

@@ -59,7 +59,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 type="button"
                 onClick={() => setView("photo")}
                 className={cn(
-                  "rounded-full border px-4 py-1.5 text-xs font-medium transition",
+                  "inline-flex min-h-11 items-center rounded-full border px-4 text-xs font-medium transition",
                   view === "photo" ? "border-gold bg-accent text-accent-foreground" : "border-border"
                 )}
               >
@@ -69,7 +69,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 type="button"
                 onClick={() => setView("3d")}
                 className={cn(
-                  "rounded-full border px-4 py-1.5 text-xs font-medium transition",
+                  "inline-flex min-h-11 items-center rounded-full border px-4 text-xs font-medium transition",
                   view === "3d" ? "border-gold bg-accent text-accent-foreground" : "border-border"
                 )}
               >

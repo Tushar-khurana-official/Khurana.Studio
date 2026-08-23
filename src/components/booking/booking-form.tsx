@@ -129,7 +129,7 @@ export function BookingForm() {
                 type="button"
                 onClick={() => n < step && setStep(n)}
                 className={cn(
-                  "flex items-center gap-2 rounded-full border px-3 py-1.5 transition",
+                  "flex min-h-11 items-center gap-2 rounded-full border px-3 transition",
                   active ? "border-gold bg-accent text-accent-foreground" : done ? "border-gold/50 text-gold" : "border-border"
                 )}
               >
@@ -187,7 +187,7 @@ export function BookingForm() {
                   type="button"
                   aria-label="Previous month"
                   onClick={() => setMonth(subMonths(currentMonth, 1))}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border hover:border-gold/50"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-border hover:border-gold/50"
                 >
                   ←
                 </button>
@@ -196,7 +196,7 @@ export function BookingForm() {
                   type="button"
                   aria-label="Next month"
                   onClick={() => setMonth(addMonths(currentMonth, 1))}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border hover:border-gold/50"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-border hover:border-gold/50"
                 >
                   →
                 </button>
@@ -243,6 +243,9 @@ export function BookingForm() {
 
           {date && (
             <div className="mt-6">
+              <p className="mb-3 text-sm font-medium text-muted-foreground/60">
+                Usually booked 2-3 weeks in advance
+              </p>
               <p className="mb-3 text-sm font-medium">Available slots for {date}</p>
               {slotsLoading ? (
                 <div className="flex flex-wrap gap-2">
@@ -256,7 +259,7 @@ export function BookingForm() {
                   <button
                     type="button"
                     onClick={() => refetchSlots()}
-                    className="mt-2 text-sm font-medium text-gold underline underline-offset-2"
+                    className="mt-2 inline-flex min-h-11 items-center text-sm font-medium text-gold underline underline-offset-2"
                   >
                     Try again
                   </button>
@@ -269,7 +272,7 @@ export function BookingForm() {
                       type="button"
                       onClick={() => setTimeSlot(slot.time)}
                       className={cn(
-                        "rounded-full border px-5 py-2 text-sm transition",
+                        "inline-flex min-h-11 items-center rounded-full border px-5 text-sm transition",
                         timeSlot === slot.time ? "border-gold bg-accent text-accent-foreground" : "border-border hover:border-gold/50"
                       )}
                     >

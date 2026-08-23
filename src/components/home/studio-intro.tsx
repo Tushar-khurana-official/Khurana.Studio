@@ -1,6 +1,7 @@
 import { Section, SectionHeading } from "@/components/ui/section";
 import { ButtonLink } from "@/components/ui/button";
 import { StudioImage } from "@/components/ui/studio-image";
+import { StaggerGroup, StaggerItem } from "@/components/ui/reveal";
 
 const pillars = [
   {
@@ -30,8 +31,8 @@ export function StudioIntro({ portrait }: { portrait?: StudioPortrait | null }) 
 
   return (
     <Section className="py-24">
-      <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
-        <div>
+      <StaggerGroup className="grid gap-14 lg:grid-cols-2 lg:items-center" stagger={0.12}>
+        <StaggerItem>
           <SectionHeading
             eyebrow="The Studio"
             title="Photography as storytelling, not snapshots"
@@ -53,9 +54,10 @@ export function StudioIntro({ portrait }: { portrait?: StudioPortrait | null }) 
           <ButtonLink href="/booking" className="mt-9">
             Work with us
           </ButtonLink>
-        </div>
+        </StaggerItem>
 
-        <div className="relative">
+        <StaggerItem>
+          <div className="relative">
           <div className="overflow-hidden rounded-3xl border border-border shadow-2xl shadow-black/20 dark:shadow-black/40">
             <div className="relative aspect-[4/5] w-full bg-muted">
               {hasPortrait ? (
@@ -96,7 +98,8 @@ export function StudioIntro({ portrait }: { portrait?: StudioPortrait | null }) 
             <p className="text-xs text-muted-foreground">Chandigarh · Available worldwide</p>
           </div>
         </div>
-      </div>
+        </StaggerItem>
+      </StaggerGroup>
     </Section>
   );
 }

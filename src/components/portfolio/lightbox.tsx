@@ -71,7 +71,7 @@ export function Lightbox({ images, index, onClose, onNavigate }: LightboxProps) 
           e.stopPropagation();
           setScale((s) => Math.min(s + 0.5, 3));
         }}
-        className="absolute bottom-6 right-24 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs text-white backdrop-blur"
+        className="absolute bottom-6 right-24 inline-flex min-h-11 items-center rounded-full border border-white/20 bg-white/10 px-4 text-xs text-white backdrop-blur"
       >
         Zoom +
       </button>
@@ -81,7 +81,7 @@ export function Lightbox({ images, index, onClose, onNavigate }: LightboxProps) 
           e.stopPropagation();
           setScale(1);
         }}
-        className="absolute bottom-6 right-12 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs text-white backdrop-blur"
+        className="absolute bottom-6 right-12 inline-flex min-h-11 items-center rounded-full border border-white/20 bg-white/10 px-4 text-xs text-white backdrop-blur"
       >
         100%
       </button>

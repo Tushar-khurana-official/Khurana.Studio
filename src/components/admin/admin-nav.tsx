@@ -26,7 +26,7 @@ export function AdminNav() {
               key={link.href}
               href={link.href}
               className={cn(
-                "whitespace-nowrap rounded-full border px-5 py-2 text-sm font-medium transition lg:rounded-xl",
+                "inline-flex min-h-11 items-center whitespace-nowrap rounded-full border px-5 text-sm font-medium transition lg:rounded-xl",
                 active
                   ? "border-gold bg-accent text-accent-foreground"
                   : "border-border hover:border-gold/50"

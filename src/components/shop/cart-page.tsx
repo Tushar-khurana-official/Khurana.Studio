@@ -74,7 +74,7 @@ export function CartPage() {
                   type="button"
                   onClick={() => removeItem(item.id)}
                   aria-label={`Remove ${item.name}`}
-                  className="text-muted-foreground transition hover:text-red-500"
+                  className="-mr-1 flex h-11 w-11 items-center justify-center text-muted-foreground transition hover:text-red-500"
                 >
                   <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
@@ -86,7 +86,7 @@ export function CartPage() {
                   <button
                     type="button"
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="h-9 w-9 rounded-full hover:bg-muted"
+                    className="h-11 w-11 rounded-full hover:bg-muted"
                     aria-label="Decrease"
                   >
                     −
@@ -95,7 +95,7 @@ export function CartPage() {
                   <button
                     type="button"
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="h-9 w-9 rounded-full hover:bg-muted"
+                    className="h-11 w-11 rounded-full hover:bg-muted"
                     aria-label="Increase"
                   >
                     +

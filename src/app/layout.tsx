@@ -4,6 +4,9 @@ import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { StickyCta } from "@/components/layout/sticky-cta";
+import { WhatsAppButton } from "@/components/layout/whatsapp-button";
+import { ScrollProgress } from "@/components/layout/scroll-progress";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +48,16 @@ export const metadata: Metadata = {
     siteName: "Khurana Studio",
   },
   robots: { index: true, follow: true },
+  links: [
+    {
+      rel: "preconnect",
+      href: "https://res.cloudinary.com",
+    },
+    {
+      rel: "dns-prefetch",
+      href: "https://res.cloudinary.com",
+    },
+  ],
 };
 
 export const viewport: Viewport = {
@@ -57,6 +70,11 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  const whatsappNumber = process.env.WHATSAPP_NUMBER?.replace(/\D/g, "");
+  const whatsappHref = whatsappNumber
+    ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hi, I'd like to know more about Khurana Studio")}`
+    : null;
+
   return (
     <html
       lang="en"
@@ -65,9 +83,22 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <Providers>
+          <ScrollProgress />
           <Navbar />
           <main className="flex-1">{children}</main>
           <Footer />
+          <StickyCta />
+          {whatsappHref && <WhatsAppButton href={whatsappHref} />}
+
+          {/* site-wide grain texture overlay */}
+          <div
+            aria-hidden
+            className="pointer-events-none fixed inset-0 z-[55] mix-blend-overlay opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+            }}
+          />
         </Providers>
       </body>
     </html>

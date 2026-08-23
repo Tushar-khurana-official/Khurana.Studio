@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { StudioImage } from "@/components/ui/studio-image";
 import { formatINR, cn } from "@/lib/utils";
 import { useCartStore } from "@/lib/cart-store";
@@ -15,7 +14,7 @@ const typeLabels: Record<string, string> = {
   DIGITAL: "Digital",
 };
 
-export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
+export function ProductCard({ product }: { product: Product }) {
   const addItem = useCartStore((s) => s.addItem);
   const wishlistIds = useWishlistStore((s) => s.ids);
   const wishlistToggle = useWishlistStore((s) => s.toggle);
@@ -23,13 +22,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
   const wished = mounted && wishlistIds.includes(product.id);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ delay: (index % 4) * 0.06, duration: 0.5 }}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition hover:border-gold/40 hover:shadow-xl hover:shadow-gold/5"
-    >
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition hover:border-gold/40 hover:shadow-xl hover:shadow-gold/5">
       <Link href={`/shop/${product.slug}`} className="relative block aspect-[4/3] overflow-hidden">
         <StudioImage
           publicId={product.images[0]}
@@ -50,7 +43,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
             e.preventDefault();
             wishlistToggle(product.id);
           }}
-          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur transition hover:bg-black/70"
+          className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur transition hover:bg-black/70"
         >
           <svg
             viewBox="0 0 24 24"
@@ -100,7 +93,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
                 image: product.images[0] ?? "",
               })
             }
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-accent-foreground transition hover:brightness-110 active:scale-95"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-accent-foreground transition hover:brightness-110 active:scale-95"
             aria-label={`Add ${product.name} to cart`}
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -109,6 +102,6 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -6,6 +6,7 @@ import { StudioImage } from "@/components/ui/studio-image";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { ButtonLink } from "@/components/ui/button";
 import { ImageSkeleton } from "@/components/ui/skeleton";
+import { StaggerGroup, StaggerItem } from "@/components/ui/reveal";
 import type { PortfolioImage } from "@/hooks/use-portfolio";
 
 const HEIGHTS = ["h-72 sm:h-80", "h-96 sm:h-[26rem]", "h-80 sm:h-96", "h-72 sm:h-80", "h-[26rem] sm:h-[28rem]"];
@@ -34,40 +35,42 @@ export function FeaturedCarousel({
         </ButtonLink>
       </div>
 
-      <div ref={ref} className="relative">
-        <motion.div style={{ x }} className="flex gap-6 will-change-transform">
-          {(loading ? Array.from({ length: 5 }) : images.length ? images : Array.from({ length: 5 })).map(
-            (img, i) => (
-              <div
-                key={(img as PortfolioImage)?.id ?? i}
-                className={`relative shrink-0 overflow-hidden rounded-2xl border border-border ${HEIGHTS[i % HEIGHTS.length]} w-64 sm:w-80 md:w-96`}
-              >
-                {loading || !(img as PortfolioImage)?.publicId ? (
-                  <ImageSkeleton className="h-full w-full rounded-none" />
-                ) : (
-                  <StudioImage
-                    publicId={(img as PortfolioImage).publicId}
-                    alt={(img as PortfolioImage).title ?? `Khurana Studio work ${i + 1}`}
-                    width={800}
-                    height={1000}
-                    sizes="(max-width: 768px) 75vw, 30vw"
-                    fill
-                    className="rounded-none transition duration-700 hover:scale-105"
-                  />
-                )}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/60 to-transparent" />
-                <span className="absolute bottom-4 left-4 text-sm font-medium text-white/90">
-                  {(img as PortfolioImage)?.title?.replaceAll("-", " ") ??
-                    `Frame ${String(i + 1).padStart(2, "0")}`}
-                </span>
-              </div>
-            )
-          )}
-        </motion.div>
+      <StaggerGroup className="relative" stagger={0.07}>
+        <div ref={ref}>
+          <motion.div style={{ x }} className="flex gap-6 will-change-transform">
+            {(loading ? Array.from({ length: 5 }) : images.length ? images : Array.from({ length: 5 })).map(
+              (img, i) => (
+                <StaggerItem
+                  key={(img as PortfolioImage)?.id ?? i}
+                  className={`relative shrink-0 overflow-hidden rounded-2xl border border-border ${HEIGHTS[i % HEIGHTS.length]} w-64 sm:w-80 md:w-96`}
+                >
+                  {loading || !(img as PortfolioImage)?.publicId ? (
+                    <ImageSkeleton className="h-full w-full rounded-none" />
+                  ) : (
+                    <StudioImage
+                      publicId={(img as PortfolioImage).publicId}
+                      alt={(img as PortfolioImage).title ?? `Khurana Studio work ${i + 1}`}
+                      width={800}
+                      height={1000}
+                      sizes="(max-width: 768px) 75vw, 30vw"
+                      fill
+                      className="rounded-none transition duration-700 hover:scale-105"
+                    />
+                  )}
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/60 to-transparent" />
+                  <span className="absolute bottom-4 left-4 text-sm font-medium text-white/90">
+                    {(img as PortfolioImage)?.title?.replaceAll("-", " ") ??
+                      `Frame ${String(i + 1).padStart(2, "0")}`}
+                  </span>
+                </StaggerItem>
+              )
+            )}
+          </motion.div>
 
-        {/* edge fade */}
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent" />
-      </div>
+          {/* edge fade */}
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent" />
+        </div>
+      </StaggerGroup>
     </Section>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { StudioImage } from "@/components/ui/studio-image";
 import { ImageSkeleton } from "@/components/ui/skeleton";
 import { Lightbox } from "@/components/portfolio/lightbox";
@@ -20,12 +20,23 @@ const categories = [
 export function Gallery({
   images,
   loading,
+  initialCategory = "",
 }: {
   images: PortfolioImage[];
   loading?: boolean;
+  initialCategory?: string;
 }) {
-  const [active, setActive] = useState<string>("");
+  const [active, setActive] = useState<string>(initialCategory);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const reduce = useReducedMotion();
+
+  const setCategory = (key: string) => {
+    setActive(key);
+    const url = new URL(window.location.href);
+    if (key) url.searchParams.set("category", key);
+    else url.searchParams.delete("category");
+    window.history.replaceState(null, "", url.toString());
+  };
 
   const filtered = active ? images.filter((img) => img.category === active) : images;
   const visible = loading ? Array.from({ length: 9 }) : filtered;
@@ -37,9 +48,9 @@ export function Gallery({
           <button
             key={cat.key}
             type="button"
-            onClick={() => setActive(cat.key)}
+            onClick={() => setCategory(cat.key)}
             className={cn(
-              "rounded-full border px-5 py-2 text-sm font-medium transition",
+              "inline-flex min-h-11 items-center rounded-full border px-5 text-sm font-medium transition",
               active === cat.key
                 ? "border-gold bg-accent text-accent-foreground"
                 : "border-border hover:border-gold/50"
@@ -56,8 +67,9 @@ export function Gallery({
             <motion.button
               key={(img as PortfolioImage)?.id ?? i}
               layout
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={reduce ? false : { opacity: 0, y: 16 }}
+              whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+              viewport={reduce ? undefined : { once: true, margin: "-40px" }}
               exit={{ opacity: 0 }}
               transition={{ delay: (i % 6) * 0.04, duration: 0.4 }}
               type="button"

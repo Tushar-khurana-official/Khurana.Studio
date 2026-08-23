@@ -9,7 +9,7 @@ export function SessionStatus({ className }: { className?: string }) {
   const loading = status === "loading";
 
   if (loading) {
-    return <div className="h-9 w-9 animate-pulse rounded-full bg-muted" aria-hidden />;
+    return <div className="h-11 w-11 animate-pulse rounded-full bg-muted" aria-hidden />;
   }
 
   if (session?.user) {
@@ -20,7 +20,7 @@ export function SessionStatus({ className }: { className?: string }) {
         aria-label="Account"
         title={session.user.name ?? "Account"}
         className={cn(
-          "flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted/50 text-xs font-semibold transition hover:border-accent/50",
+          "flex h-11 w-11 items-center justify-center rounded-full border border-border bg-muted/50 text-xs font-semibold transition hover:border-accent/50",
           className
         )}
       >
@@ -37,7 +37,7 @@ export function SessionStatus({ className }: { className?: string }) {
   return (
     <Link
       href="/login"
-      className="flex h-9 items-center rounded-full border border-border bg-muted/50 px-4 text-sm font-medium transition hover:border-accent/50"
+      className="flex h-11 items-center rounded-full border border-border bg-muted/50 px-4 text-sm font-medium transition hover:border-accent/50"
     >
       Sign in
     </Link>

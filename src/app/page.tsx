@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { Hero } from "@/components/home/hero";
 import { FeaturedCarousel } from "@/components/home/featured-carousel";
 import { Stats } from "@/components/home/stats";
+import { TrustStrip } from "@/components/home/trust-strip";
 import { StudioIntro } from "@/components/home/studio-intro";
 import { Testimonials } from "@/components/home/testimonials";
 import { Cta } from "@/components/home/cta";
@@ -65,9 +66,10 @@ export default async function HomePage() {
   return (
     <>
       <JsonLd />
-      <Hero />
+      <Hero images={featured} />
       <FeaturedCarousel images={featured} />
       <Stats />
+      <TrustStrip testimonials={testimonials} />
       <StudioIntro portrait={studioPortrait} />
       <Testimonials testimonials={testimonials} />
       <Cta />

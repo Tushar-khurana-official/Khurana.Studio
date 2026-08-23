@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Section } from "@/components/ui/section";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ProductDetail } from "@/components/shop/product-detail";
 import { prisma } from "@/lib/prisma";
 import { productSelect } from "@/lib/query";
@@ -60,17 +60,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   return (
     <section className="pt-28">
       <Section>
-        <nav className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
-          <Link href="/" className="transition hover:text-gold">
-            Home
-          </Link>
-          <span>/</span>
-          <Link href="/shop" className="transition hover:text-gold">
-            Shop
-          </Link>
-          <span>/</span>
-          <span className="text-foreground">{product.name}</span>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Shop", href: "/shop" },
+            { label: product.name },
+          ]}
+        />
         <ProductDetail product={product} />
       </Section>
     </section>

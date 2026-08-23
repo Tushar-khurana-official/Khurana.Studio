@@ -12,7 +12,7 @@ export function CartButton() {
     <Link
       href="/cart"
       aria-label={mounted ? `Cart with ${count} items` : "Cart"}
-      className="relative flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted/50 transition hover:border-accent/50"
+      className="relative flex h-11 w-11 items-center justify-center rounded-full border border-border bg-muted/50 transition hover:border-accent/50"
     >
       <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 4.6a1 1 0 0 0 .9 1.4H19M9 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm7 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
